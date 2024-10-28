@@ -34,7 +34,44 @@ impl Default for Person {
 // 5. Parse the second element from the split operation into a `u8` as the age.
 // 6. If parsing the age fails, return the default of `Person`.
 impl From<&str> for Person {
-    fn from(s: &str) -> Self {}
+    fn from(s: &str) -> Person {
+        let comps: Vec<&str> = s.split(",").collect();
+        if let [name, age] = comps.as_slice() {
+            if name.is_empty() {
+                Person::default()
+            } else {
+                let name = String::from(*name);
+                match age.parse() {
+                    Ok(age) => Person { name, age },
+                    Err(_) => Person::default(),
+                }
+            }
+        } else {
+            Person::default()
+        }
+
+        /* The solution proposed is more elegant here, taking advantage of if-let's compact else clause:
+
+        let mut split = s.split(',');
+        let (Some(name), Some(age), None) = (split.next(), split.next(), split.next()) else {
+            //                      ^^^^ there should be no third element
+            return Self::default();
+        };
+
+        if name.is_empty() {
+            return Self::default();
+        }
+
+        let Ok(age) = age.parse() else {
+            return Self::default();
+        };
+
+        Self {
+            name: name.into(),
+            age,
+        }
+        */
+    }
 }
 
 fn main() {

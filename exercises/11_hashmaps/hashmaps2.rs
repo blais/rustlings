@@ -28,10 +28,20 @@ fn fruit_basket(basket: &mut HashMap<Fruit, u32>) {
         Fruit::Pineapple,
     ];
 
-    for fruit in fruit_kinds {
-        // TODO: Insert new fruits if they are not already present in the
-        // basket. Note that you are not allowed to put any type of fruit that's
-        // already present!
+    let total: u32 = basket.values().sum();
+    if total < 11 || basket.len() < 5 {
+        if basket.len() == 5  {
+            panic!("Cannot help with basket");
+        }
+        let num_add = ((11 - total) / (5 - basket.len()) as u32) + 1;
+        println!("XXX num_add {}", num_add);
+
+        for fruit in fruit_kinds {
+            // TODO: Insert new fruits if they are not already present in the
+            // basket. Note that you are not allowed to put any type of fruit that's
+            // already present!
+            basket.entry(fruit).or_insert(num_add);
+        }
     }
 }
 
